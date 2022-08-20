@@ -4,4 +4,8 @@ wasm_binary(
     name = "hello",
     srcs = ["hello.c"],
     out = ["hello.js", "hello.wasm"],
+    target_compatible_with = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64"
+    ]
 )

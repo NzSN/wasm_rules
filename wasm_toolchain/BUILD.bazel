@@ -16,9 +16,17 @@ toolchain(
         "@platforms//cpu:x86_64",
     ],
     target_compatible_with = [
-        "@platforms//os:linux",
-        "@platforms//cpu:x86_64",
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64",
     ],
     toolchain = ":emcc_linux",
     toolchain_type = ":emcc_toolchain",
+)
+
+platform(
+    name = "wasm",
+    constraint_values = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64",
+    ]
 )
