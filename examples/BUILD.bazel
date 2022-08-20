@@ -3,7 +3,15 @@ load("//wasm:wasm_binary.bzl", "wasm_binary")
 wasm_binary(
     name = "hello",
     srcs = ["hello.c"],
-    out = ["hello.js", "hello.wasm"],
+    target_compatible_with = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64"
+    ]
+)
+
+wasm_library(
+    name = "statement",
+    srcs = ["statement.c"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"

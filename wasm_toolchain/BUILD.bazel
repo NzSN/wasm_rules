@@ -6,7 +6,7 @@ toolchain_type(
 
 emcc_toolchain(
     name = "emcc_linux",
-    compiler_path = "/home/aydenlin/Codebase/LAIHUA/emsdk/upstream/emscripten/emcc",
+    compiler_path = "emcc",
 )
 
 toolchain(
