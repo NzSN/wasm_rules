@@ -24,9 +24,17 @@ toolchain(
 )
 
 platform(
-    name = "wasm",
+    name = "wasm64",
     constraint_values = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64",
+    ]
+)
+
+platform(
+    name = "wasm32",
+    constraint_values = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm32",
     ]
 )
