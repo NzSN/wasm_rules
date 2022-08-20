@@ -1,0 +1,7 @@
+load("//wasm:wasm_binary.bzl", "wasm_binary")
+
+wasm_binary(
+    name = "hello",
+    srcs = ["hello.c"],
+    out = ["hello.js", "hello.wasm"],
+)

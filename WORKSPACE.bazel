@@ -1,0 +1,1 @@
+register_toolchains("//wasm_toolchain:emcc_linux_toolchain")

@@ -1,0 +1,24 @@
+load(":emcc.bzl", "emcc_toolchain")
+
+toolchain_type(
+    name = "emcc_toolchain",
+)
+
+emcc_toolchain(
+    name = "emcc_linux",
+    compiler_path = "/home/aydenlin/Codebase/LAIHUA/emsdk/upstream/emscripten/emcc",
+)
+
+toolchain(
+    name = "emcc_linux_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":emcc_linux",
+    toolchain_type = ":emcc_toolchain",
+)
