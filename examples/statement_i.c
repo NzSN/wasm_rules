@@ -1,5 +1,5 @@
 #include <stdio.h>
 
-void say(const *s) {
+void say(char *s) {
     printf("Hello, World!\n");
 }
