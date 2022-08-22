@@ -13,9 +13,20 @@ wasm_binary(
 
 wasm_library(
     name = "statement",
-    srcs = ["statement.c", "statement_i.c"],
+    srcs = ["statement.c"],
+	deps = [":statement-i"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"
     ]
 )
+
+wasm_library(
+	name = "statement-i",
+	srcs = ["statement_i.c"],
+    target_compatible_with = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64"
+    ]
+)
+
