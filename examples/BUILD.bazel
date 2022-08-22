@@ -1,8 +1,10 @@
 load("//wasm:wasm_binary.bzl", "wasm_binary")
+load("//wasm:wasm_library.bzl", "wasm_library")
 
 wasm_binary(
     name = "hello",
     srcs = ["hello.c"],
+    deps = [":statement"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"

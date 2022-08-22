@@ -8,7 +8,7 @@ def _wasm_binary_impl(ctx):
 
     script = []
     srcs   = []
-    deps   = []
+    deps   = ctx.files.deps
     out_js_file = ctx.actions.declare_file(ctx.attr.name + ".js")
     out_wasm_file = ctx.actions.declare_file(ctx.attr.name + ".wasm")
 
@@ -24,6 +24,10 @@ def _wasm_binary_impl(ctx):
     for src in srcs:
         script.append(src.path)
 
+    # Add deps
+    for dep in deps:
+        script.append(dep.path)
+
     # Add link compile opts
     for copt in ctx.attr.copts:
         script.append(copt)
@@ -32,6 +36,8 @@ def _wasm_binary_impl(ctx):
     script.append("-o %s" % out_js_file.path)
 
     script_text = " ".join(script)
+
+    print(script_text)
 
     ctx.actions.run_shell(
         inputs = ctx.files.srcs,
