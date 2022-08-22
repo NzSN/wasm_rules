@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+
+void say(char *s);
+
 void speak(char *s) {
-	printf("%s\n", s);
+	say(s);
 }
