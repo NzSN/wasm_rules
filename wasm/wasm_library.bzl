@@ -9,6 +9,7 @@ def _wasm_library_impl(ctx):
     runfiles_files = ctx.files.srcs
 
     for dep in ctx.attr.deps:
+        print(dep[DefaultInfo].default_runfiles.files)
         dep_runfiles = dep[OutputGroupInfo]._hidden_top_level_INTERNAL_.to_list()
         runfiles_files = runfiles_files + dep_runfiles
     
@@ -24,8 +25,8 @@ def _wasm_library_impl(ctx):
         }
     )
 
-    return [DefaultInfo(files = depset([libfile], transitive = [depset(ctx.files.deps)]),
-						runfiles = runfiles)]
+    return DefaultInfo(files = depset([libfile], transitive = [depset(ctx.files.deps)]),
+						runfiles = runfiles)
 
 wasm_library = rule(
     implementation = _wasm_library_impl,
