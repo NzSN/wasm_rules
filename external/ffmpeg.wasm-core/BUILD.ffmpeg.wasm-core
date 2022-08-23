@@ -1,0 +1,7 @@
+load("@wasm_rules//wasm_utils:make_ffmpeg_wasm.bzl", "make_ffmpeg_wasm")
+
+make_ffmpeg_wasm(
+    name = "core",
+    srcs = glob(["**"]),
+	visibility = ["//visibility:public"],
+)

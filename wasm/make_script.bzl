@@ -1,3 +1,4 @@
+load("//wasm_utils:utils.bzl", "is_archive")
 
 def emcc_compile(tool, srcs, copts, output):
     info = tool.emccinfo
@@ -16,14 +17,15 @@ def make_library_script(tool, srcs, deps, copts, libfile):
 
     script_texts = []
 
-    srcs = [f for f in srcs if f.basename.split(".")[-1] != "a"]
+    srcs = [f for f in srcs if not is_archive(f) and f.is_source]
 
     # Compile object file
     script_texts.append(emcc_compile(tool, srcs, copts + ["-c"], None))
 
     # Extract objects from deps
     for dep in deps:
-        script_texts.append("emar x %s" % dep.path)
+        if is_archive(dep):
+           script_texts.append("emar x %s" % dep.path)
 
     # Build archive
     script_texts.append("emar rcs %s *.o" % libfile.path)

@@ -1,1 +1,12 @@
+workspace(name = "wasm_rules")
+
 register_toolchains("//wasm_toolchain:emcc_linux_toolchain")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
+
+new_git_repository(
+    name = "ffmpeg.wasm-core",
+    remote = "git@gitlab.laihua.com:laihua-cpp/ffmpeg-core.git",
+    branch = "bazel",
+    build_file = "ffmpeg.wasm-core/BUILD.ffmpeg.wasm-core",
+    recursive_init_submodules = True
+)
