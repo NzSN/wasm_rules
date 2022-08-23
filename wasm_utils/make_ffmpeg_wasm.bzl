@@ -13,7 +13,7 @@ def _make_ffmpeg_wasm_impl(ctx):
     third_party = ctx.actions.declare_directory("third_party")
 
     # Build Script
-    build_file = ctx.expand_location("$(locations build.sh)")
+    build_file = ctx.expand_location("$(locations build-with-docker.sh)")
     script = ["(cd $(dirname \"$1\"); ./build-with-docker.sh)"]
     for file in out_files:
         script.append(

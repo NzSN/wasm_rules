@@ -5,7 +5,6 @@ wasm_library(
     name = "encode",
     srcs = ["hello.c"],
     deps = ["@ffmpeg.wasm-core//:core"],
-    copts = ["-s WASM=1"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"
