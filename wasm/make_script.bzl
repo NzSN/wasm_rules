@@ -11,11 +11,19 @@ def emcc_compile(tool, srcs, copts, output):
 
     return " ".join(script)
 
-def make_library_script(tool, srcs, copts, libfile):
+def make_library_script(tool, srcs, deps, copts, libfile):
     tool_info = tool
 
     script_texts = []
+
+    # Compile object file
     script_texts.append(emcc_compile(tool, srcs, copts + ["-c"], None))
+
+    # Extract objects from deps
+    for dep in deps:
+        script_texts.append("emar x %s" % dep.path)
+
+    # Build archive
     script_texts.append("emar rcs %s *.o" % libfile.path)
 
     script_text = ";".join(script_texts)
@@ -31,8 +39,6 @@ def make_binary_script(tool, srcs, dep_targets, copts, libfile):
     for dep in dep_targets:
         output = dep[DefaultInfo].files.to_list()[0]
         srcs = srcs + [output]
-        script_texts.append(make_library_script(
-            tool, dep[DefaultInfo].default_runfiles.files.to_list(), copts, output))
 
     # Build binary
     script_texts.append(emcc_compile(tool, srcs, copts, libfile))

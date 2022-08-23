@@ -1,7 +1,5 @@
 #include <stdio.h>
-
-
-void say(char *s);
+#include "statement_i.h"
 
 void speak(char *s) {
 	say(s);

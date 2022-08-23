@@ -21,11 +21,13 @@ def _wasm_binary_impl(ctx):
         if ext == "c" or ext == "cc":
             srcs.append(src)
 
+    deps_ = [dep[DefaultInfo].files.to_list()[0] for dep in ctx.attr.deps]
+
     script_text = make_binary_script(
         tool, srcs, ctx.attr.deps, ctx.attr.copts, out_js_file)
 
     ctx.actions.run_shell(
-        inputs = ctx.files.srcs,
+        inputs = ctx.files.srcs + deps_,
         outputs = [out_js_file, out_wasm_file],
         command = script_text,
         use_default_shell_env = True,
