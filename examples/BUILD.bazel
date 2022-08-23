@@ -24,6 +24,7 @@ wasm_library(
 wasm_library(
 	name = "statement-i",
 	srcs = ["statement_i.c"],
+    hdrs = ["statement_i.h"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"

@@ -31,9 +31,6 @@ def _wasm_binary_impl(ctx):
         outputs = [out_js_file, out_wasm_file],
         command = script_text,
         use_default_shell_env = True,
-        execution_requirements = {
-            "local": "1"
-        }
     )
 
     return [DefaultInfo(files = depset([out_js_file, out_wasm_file]))]

@@ -3,7 +3,7 @@ def emcc_compile(tool, srcs, copts, output):
     info = tool.emccinfo
 
     script = []
-    script.append("%s %s" % (info.compiler_path, " ".join(copts)))
+    script.append("set -euo pipefail; %s %s" % (info.compiler_path, " ".join(copts)))
     script.append("%s" % " ".join([src.path for src in srcs]))
 
     if output != None:
@@ -15,6 +15,8 @@ def make_library_script(tool, srcs, deps, copts, libfile):
     tool_info = tool
 
     script_texts = []
+
+    srcs = [f for f in srcs if f.basename.split(".")[-1] != "a"]
 
     # Compile object file
     script_texts.append(emcc_compile(tool, srcs, copts + ["-c"], None))
@@ -44,6 +46,5 @@ def make_binary_script(tool, srcs, dep_targets, copts, libfile):
     script_texts.append(emcc_compile(tool, srcs, copts, libfile))
 
     text = "; \\\n".join(script_texts)
-    print(text)
 
     return text
