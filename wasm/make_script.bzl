@@ -1,23 +1,43 @@
 
-def make_library_script(tool, srcs, copts, libfile):
-    tool_info = tool.emccinfo
+def emcc_compile(tool, srcs, copts, output):
+    info = tool.emccinfo
+
     script = []
-    script.append("%s" % tool_info.compiler_path)
+    script.append("%s %s" % (info.compiler_path, " ".join(copts)))
+    script.append("%s" % " ".join([src.path for src in srcs]))
 
-    # Compile all sources into object file
-    script.append("-c")
+    if output != None:
+       script.append("-o %s" % output.path)
 
-    # Add compile options
-    for copt in copts:
-        script.append(copt)
+    return " ".join(script)
 
-    # Add source files
-    for src in srcs:
-        script.append(src.path)
+def make_library_script(tool, srcs, copts, libfile):
+    tool_info = tool
 
-    script.append(";")
-    script.append("emar rcs %s *.o" % libfile.path)
+    script_texts = []
+    script_texts.append(emcc_compile(tool, srcs, copts + ["-c"], None))
+    script_texts.append("emar rcs %s *.o" % libfile.path)
 
-    script_text = " ".join(script)
+    script_text = ";".join(script_texts)
 
     return script_text
+
+def make_binary_script(tool, srcs, dep_targets, copts, libfile):
+    tool_info = tool.emccinfo
+
+    script_texts = []
+
+    # Handle dependencies
+    for dep in dep_targets:
+        output = dep[DefaultInfo].files.to_list()[0]
+        srcs = srcs + [output]
+        script_texts.append(make_library_script(
+            tool, dep[DefaultInfo].default_runfiles.files.to_list(), copts, output))
+
+    # Build binary
+    script_texts.append(emcc_compile(tool, srcs, copts, libfile))
+
+    text = "; \\\n".join(script_texts)
+    print(text)
+
+    return text

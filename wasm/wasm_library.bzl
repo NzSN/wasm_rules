@@ -6,17 +6,13 @@ def _wasm_library_impl(ctx):
     libfile = ctx.actions.declare_file(ctx.attr.name + ".a")
     script_text = make_library_script(tool, ctx.files.srcs, [], libfile)
 
-    runfiles_files = ctx.files.srcs
+    runfiles = ctx.runfiles(files = ctx.files.srcs)
 
     for dep in ctx.attr.deps:
-        print(dep[DefaultInfo].default_runfiles.files)
-        dep_runfiles = dep[OutputGroupInfo]._hidden_top_level_INTERNAL_.to_list()
-        runfiles_files = runfiles_files + dep_runfiles
-    
-    runfiles = ctx.runfiles(files = runfiles_files)
+        runfiles = runfiles.merge(dep[DefaultInfo].default_runfiles)
 
     ctx.actions.run_shell(
-        inputs = runfiles_files,
+        inputs = runfiles.files,
         outputs = [libfile],
         command = script_text,
         use_default_shell_env = True,
@@ -25,14 +21,14 @@ def _wasm_library_impl(ctx):
         }
     )
 
-    return DefaultInfo(files = depset([libfile], transitive = [depset(ctx.files.deps)]),
+    return DefaultInfo(files = depset([libfile]),
 						runfiles = runfiles)
 
 wasm_library = rule(
     implementation = _wasm_library_impl,
     attrs = {
         "srcs": attr.label_list(allow_files = True),
-        "deps": attr.label_list(allow_files = True),
+        "deps": attr.label_list(),
         "copts": attr.string_list(),
     },
     toolchains = ["//wasm_toolchain:emcc_toolchain"]

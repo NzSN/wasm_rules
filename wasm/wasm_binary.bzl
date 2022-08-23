@@ -1,13 +1,16 @@
+load(":make_script.bzl", "make_library_script")
+load(":make_script.bzl", "make_binary_script")
 
 def _is_wasm(file):
     return file.basename.split(".")[-1] == "wasm"
 
 def _wasm_binary_impl(ctx):
 
-    tool = ctx.toolchains["//wasm_toolchain:emcc_toolchain"].emccinfo
+    tool = ctx.toolchains["//wasm_toolchain:emcc_toolchain"]
 
     script = []
     srcs   = []
+
     deps   = ctx.files.deps
     out_js_file = ctx.actions.declare_file(ctx.attr.name + ".js")
     out_wasm_file = ctx.actions.declare_file(ctx.attr.name + ".wasm")
@@ -18,24 +21,8 @@ def _wasm_binary_impl(ctx):
         if ext == "c" or ext == "cc":
             srcs.append(src)
 
-    script.append("%s" % tool.compiler_path)
-
-    # Add source files
-    for src in srcs:
-        script.append(src.path)
-
-    # Add deps
-    for dep in deps:
-        script.append(dep.path)
-
-    # Add link compile opts
-    for copt in ctx.attr.copts:
-        script.append(copt)
-
-    # Add output flag
-    script.append("-o %s" % out_js_file.path)
-
-    script_text = " ".join(script)
+    script_text = make_binary_script(
+        tool, srcs, ctx.attr.deps, ctx.attr.copts, out_js_file)
 
     ctx.actions.run_shell(
         inputs = ctx.files.srcs,
@@ -54,7 +41,7 @@ wasm_binary = rule(
     implementation = _wasm_binary_impl,
     attrs = {
         "srcs": attr.label_list(allow_files = True),
-        "deps": attr.label_list(allow_files = True),
+        "deps": attr.label_list(),
         "copts": attr.string_list(),
     },
     toolchains = ["//wasm_toolchain:emcc_toolchain"],
