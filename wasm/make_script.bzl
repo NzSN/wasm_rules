@@ -21,15 +21,7 @@ def make_library_script(tool, srcs, deps, copts, libfile):
 
     # Compile object file
     script_texts.append(emcc_compile(tool, srcs, copts + ["-c"], None))
-
-    # Extract objects from deps
-    for dep in deps:
-        if is_archive(dep):
-           script_texts.append("emar x %s" % dep.path)
-
-    # Build archive
     script_texts.append("emar rcs %s *.o" % libfile.path)
-
     script_text = ";".join(script_texts)
 
     return script_text
@@ -37,15 +29,23 @@ def make_library_script(tool, srcs, deps, copts, libfile):
 def make_binary_script(tool, srcs, dep_targets, copts, libfile):
     tool_info = tool.emccinfo
 
+    copts_ = [copt for copt in copts]
     script_texts = []
 
     # Handle dependencies
     for dep in dep_targets:
-        output = dep[DefaultInfo].files.to_list()[0]
-        srcs = srcs + [output]
+        # Handle include path
+        include_dirs = dep[OutputGroupInfo].include_dir.to_list()
+        for dir in include_dirs:
+            copts_.append("-I%s" % dir.path)
+
+        # Handle link path
+        link_paths = dep[OutputGroupInfo].lib_dir.to_list()
+        for lpath in link_paths:
+            copts_.append("-L%s" % lpath.path)
 
     # Build binary
-    script_texts.append(emcc_compile(tool, srcs, copts, libfile))
+    script_texts.append(emcc_compile(tool, srcs, copts_, libfile))
 
     text = "; \\\n".join(script_texts)
 

@@ -10,24 +10,28 @@ def _wasm_binary_impl(ctx):
 
     script = []
     srcs   = []
+    copts  = [copt for copt in ctx.attr.copts]
+    inputs = ctx.files.srcs + ctx.files.deps
 
     deps   = ctx.files.deps
     out_js_file = ctx.actions.declare_file(ctx.attr.name + ".js")
     out_wasm_file = ctx.actions.declare_file(ctx.attr.name + ".wasm")
 
     # Collect source files
-    for src in ctx.files.srcs:
-        ext = src.basename.split(".")[-1]
-        if ext == "c" or ext == "cc":
-            srcs.append(src)
+    srcs = [src for src in ctx.files.srcs]
 
-    deps_ = [dep[DefaultInfo].files.to_list()[0] for dep in ctx.attr.deps]
+    # Collect headers
+    hdrs = []
+    for dep in ctx.attr.deps:
+        hdrs += dep[OutputGroupInfo].include.to_list()
+        srcs += dep[OutputGroupInfo].outputs.to_list()
 
     script_text = make_binary_script(
-        tool, srcs, ctx.attr.deps, ctx.attr.copts, out_js_file)
+        tool, srcs, ctx.attr.deps, copts, out_js_file)
 
+    print(script_text)
     ctx.actions.run_shell(
-        inputs = ctx.files.srcs + deps_,
+        inputs = inputs,
         outputs = [out_js_file, out_wasm_file],
         command = script_text,
         use_default_shell_env = True,
