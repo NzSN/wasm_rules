@@ -1,6 +1,17 @@
 load("//wasm:wasm_binary.bzl", "wasm_binary")
 load("//wasm:wasm_library.bzl", "wasm_library")
 
+wasm_binary(
+    name = "app",
+    srcs = ["app.c"],
+    deps = [":encode"],
+    copts = ["-lx264", "-lmp3lame", "-lz"],
+    target_compatible_with = [
+        "@platforms//os:wasi",
+        "@platforms//cpu:wasm64"
+    ]
+)
+
 wasm_library(
     name = "encode",
     srcs = ["hello.c"],
