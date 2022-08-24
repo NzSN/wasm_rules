@@ -30,4 +30,3 @@ wasm_library(
         "@platforms//cpu:wasm64"
     ]
 )
-
