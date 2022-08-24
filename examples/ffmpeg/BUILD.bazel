@@ -5,7 +5,23 @@ wasm_binary(
     name = "app",
     srcs = ["app.c"],
     deps = [":encode"],
-    copts = ["-lx264", "-lmp3lame", "-lz"],
+    copts = [
+          # linkopts
+          "-lavformat",
+          "-lavcodec",
+          "-lavutil",
+          "-lx264",
+          "-lmp3lame",
+          "-lz",
+
+          # WASM flags
+          "-s WASM=1",
+          "-s MODULARIZE=1",
+          "-s FORCE_FILESYSTEM=1",
+          "-s FETCH=1",
+          "-s EXIT_RUNTIME=0",
+          "-s EXPORT_NAME=\"createApp\"",
+          "-s ASSERTIONS=1"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"
