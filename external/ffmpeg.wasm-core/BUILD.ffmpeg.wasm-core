@@ -1,7 +1,16 @@
 load("@wasm_rules//wasm_utils:make_ffmpeg_wasm.bzl", "make_ffmpeg_wasm")
 
+package(features = [])
+
 make_ffmpeg_wasm(
     name = "core",
     srcs = ["build-with-docker.sh"],
 	visibility = ["//visibility:public"],
+)
+
+make_ffmpeg_wasm(
+    name = "core-mp3mp4",
+    srcs = ["build-with-docker.sh"],
+    visibility = ["//visibility:public"],
+    features = ["mp3mp4"],
 )

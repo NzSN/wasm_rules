@@ -6,7 +6,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_r
 new_git_repository(
     name = "ffmpeg.wasm-core",
     remote = "git@gitlab.laihua.com:laihua-cpp/ffmpeg-core.git",
-	commit = "ef3f1c43bcc8b8c61d99862adf1f119ca3739976",
+	commit = "121d449ccde7718294ee5037122514f99ea745eb",
 	shallow_since = "1661250785 +0800",
     build_file = "ffmpeg.wasm-core/BUILD.ffmpeg.wasm-core",
     recursive_init_submodules = True
