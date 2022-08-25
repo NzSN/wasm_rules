@@ -27,9 +27,12 @@ def _configure_mp3mp4():
     return "sed -i -r 's/#(build-(zlib|x264|lame|fdk-aac))/\\1/' build.sh; \
             (cd wasm/build-scripts; \
              sed -i -r 's/#(--enable-(gpl|nonfree|zlib|libx264|libmp3lame|libfdk-aac|libvorbis|libopus))/\\1/' configure-ffmpeg.sh; \
-             sed '/--enable-gpl/ i \\--enable-muxer=mp3,mp4,adts\n--enable-demuxer=mp3,mov,matroska\n--enable-encoder=libx264,libmp3lame,aac*\n \
-                  --enable-decoder=h264*,mp3,aac*,ac3*,opus,vorbis\n--enable-filter=abuffer,amix,abuffersink,aresample,aformat,atrim,adelay,aloop,volume,asetpts,afade\n\
-                  --enable-protocol=file' configure-ffmpeg.sh)"
+             sed -i '/--enable-gpl/ i --enable-muxer=mp3,mp4,adts \\n\
+                                      --enable-demuxer=mp3,mov,matroska \\n\
+                                      --enable-encoder=libx264,libmp3lame,aac* \\n\
+                                      --enable-decoder=h264*,mp3,aac*,ac3*,opus,vorbis \\n\
+                                      --enable-filter=abuffer,amix,abuffersink,aresample,aformat,atrim,adelay,aloop,volume,asetpts,afade \\n\
+                                      --enable-protocol=file' configure-ffmpeg.sh)"
 
 def _configure_apng():
     pass
@@ -71,6 +74,7 @@ def _make_ffmpeg_wasm_impl(ctx):
         script.append("cp -r $(dirname \"$1\")/" + lib + " " + include_root.path)
 
     script_text = "\n".join(script)
+    print(script_text)
 
     outputs = [lib_dir, third_party, include_root]
 
