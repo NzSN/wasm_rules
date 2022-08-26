@@ -29,7 +29,6 @@ def _wasm_binary_impl(ctx):
     script_text = make_binary_script(
         tool, srcs, ctx.attr.deps, copts, out_js_file)
 
-    print(script_text)
     ctx.actions.run_shell(
         inputs = inputs,
         outputs = [out_js_file, out_wasm_file],

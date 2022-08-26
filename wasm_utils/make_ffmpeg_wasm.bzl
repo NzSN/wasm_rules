@@ -24,7 +24,7 @@ def _script_configure(root_dir, features):
     return script_text
 
 def _configure_mp3mp4():
-    return "sed -i -r 's/#(build-(zlib|x264|lame|fdk-aac))/\\1/' build.sh; \
+    return "sed -i -r 's/#(build-(zlib|x264|lame|fdk-aac|vorbis|opus|ogg))/\\1/' build.sh; \
             (cd wasm/build-scripts; \
              sed -i -r 's/#(--enable-(gpl|nonfree|zlib|libx264|libmp3lame|libfdk-aac|libvorbis|libopus))/\\1/' configure-ffmpeg.sh; \
              sed -i '/--enable-gpl/ i --enable-muxer=mp3,mp4,adts \\n\
@@ -74,7 +74,6 @@ def _make_ffmpeg_wasm_impl(ctx):
         script.append("cp -r $(dirname \"$1\")/" + lib + " " + include_root.path)
 
     script_text = "\n".join(script)
-    print(script_text)
 
     outputs = [lib_dir, third_party, include_root]
 

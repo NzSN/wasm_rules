@@ -13,6 +13,7 @@ wasm_binary(
           "-lx264",
           "-lmp3lame",
           "-lz",
+          "-lswresample",
 
           # WASM flags
           "-s WASM=1",
@@ -37,7 +38,7 @@ wasm_binary(
 wasm_library(
     name = "encode",
     srcs = ["hello.c"],
-    deps = ["@ffmpeg.wasm-core//:core"],
+    deps = ["@ffmpeg.wasm-core//:core-mp3mp4"],
     target_compatible_with = [
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"
