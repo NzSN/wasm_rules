@@ -28,4 +28,6 @@ EM_PORT_API(int) doing(void) {
     return 0;
 }
 
-int main(void) {}
+int main(void) {
+    doing();
+}
