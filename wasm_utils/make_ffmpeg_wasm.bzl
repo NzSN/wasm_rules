@@ -50,7 +50,7 @@ def _make_ffmpeg_wasm_impl(ctx):
     lib_dir = ctx.actions.declare_directory("lib")
     third_party = ctx.actions.declare_directory("third_party")
 
-    build_file = ctx.expand_location("$(locations build-with-docker.sh)")
+    build_file = ctx.expand_location("$(locations build.sh)")
     ffmpeg_root = "/".join(build_file.split("/")[0:-1])
 
     script = [
@@ -63,7 +63,7 @@ def _make_ffmpeg_wasm_impl(ctx):
        script.append(_script_configure(ffmpeg_root, ctx.features))
 
     # Build Script
-    script.append("set -euo pipefail; (cd $(dirname \"$1\"); ./build-with-docker.sh)")
+    script.append("set -euo pipefail; (cd $(dirname \"$1\"); ./build.sh)")
     for lib in libs:
         script.append(
             "cp $(dirname \"$1\")/" + lib + "/" + lib + ".a " + lib_dir.path
@@ -82,9 +82,7 @@ def _make_ffmpeg_wasm_impl(ctx):
         outputs = outputs,
         command = script_text,
         arguments = [build_file],
-        execution_requirements = {
-            "local": "1",
-        },
+        use_default_shell_env = True,
         progress_message = "Build ffmpeg.wasm-core",
     )
 
