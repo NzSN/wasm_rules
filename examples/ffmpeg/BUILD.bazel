@@ -4,6 +4,7 @@ load("//wasm:wasm_library.bzl", "wasm_library")
 wasm_binary(
     name = "app",
     srcs = ["app.c"],
+    hdrs = ["api.h"],
     deps = [":encode"],
     copts = [
           # linkopts

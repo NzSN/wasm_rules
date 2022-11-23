@@ -11,7 +11,7 @@ def _wasm_binary_impl(ctx):
     script = []
     srcs   = []
     copts  = [copt for copt in ctx.attr.copts]
-    inputs = ctx.files.srcs + ctx.files.deps
+    inputs = ctx.files.srcs + ctx.files.deps + ctx.files.hdrs
 
     deps   = ctx.files.deps
     out_js_file = ctx.actions.declare_file(ctx.attr.name + ".js")
@@ -21,7 +21,7 @@ def _wasm_binary_impl(ctx):
     srcs = [src for src in ctx.files.srcs]
 
     # Collect headers
-    hdrs = []
+    hdrs = [] + ctx.files.hdrs
     for dep in ctx.attr.deps:
         hdrs += dep[OutputGroupInfo].include.to_list()
         srcs += dep[OutputGroupInfo].outputs.to_list()
@@ -43,6 +43,7 @@ wasm_binary = rule(
     implementation = _wasm_binary_impl,
     attrs = {
         "srcs": attr.label_list(allow_files = True),
+        "hdrs": attr.label_list(allow_files = True),
         "deps": attr.label_list(),
         "copts": attr.string_list(),
     },
