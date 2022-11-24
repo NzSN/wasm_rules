@@ -1,5 +1,6 @@
 load("//wasm:wasm_binary.bzl", "wasm_binary")
 load("//wasm:wasm_library.bzl", "wasm_library")
+load("//wasm_utils:deploy.bzl", "wasm_deploy")
 
 wasm_binary(
     name = "app",
@@ -44,4 +45,10 @@ wasm_library(
         "@platforms//os:wasi",
         "@platforms//cpu:wasm64"
     ]
+)
+
+wasm_deploy(
+    name = "install",
+    srcs = [":app"],
+    target = "/home/linshizhi/Workspaces/Mediawasm/BuildRule/wasm_rules/workers",
 )
