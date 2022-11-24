@@ -41,7 +41,7 @@ def _make_ffmpeg_wasm_impl(ctx):
     script.append(_script_configure(ffmpeg_root, ctx.attr.config_flags, ctx.attr.enable_libs))
 
     # Build Script
-    script.append("set -euo pipefail; (cd $(dirname \"$1\"); sudo ./build.sh)")
+    script.append("set -euo pipefail; (cd $(dirname \"$1\"); ./build.sh)")
     for lib in libs:
         script.append(
             "cp $(dirname \"$1\")/" + lib + "/" + lib + ".a " + lib_dir.path
