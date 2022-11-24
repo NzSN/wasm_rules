@@ -8,7 +8,6 @@ def _script_configure(root_dir, flags, libs):
 
     if len(flags) > 0:
        script.append("(cd wasm/build-scripts/; \
-                       sed -i -r 's/(--enable-gpl)/--disable-everything\\n\\1/' configure-ffmpeg.sh; \
                        sed -i -r 's/(--enable-.*)/#\\1/' configure-ffmpeg.sh)")
 
     # Enable need libraries
