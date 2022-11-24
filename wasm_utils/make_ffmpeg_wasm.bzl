@@ -35,10 +35,7 @@ def _make_ffmpeg_wasm_impl(ctx):
     build_file = ctx.expand_location("$(locations build.sh)")
     ffmpeg_root = "/".join(build_file.split("/")[0:-1])
 
-    script = [
-        # Reset repository to default status
-        "(cd $(dirname \"$1\"); git reset --hard HEAD)"
-    ]
+    script = []
 
     # Configure ffmpeg
     script.append(_script_configure(ffmpeg_root, ctx.attr.config_flags, ctx.attr.enable_libs))
