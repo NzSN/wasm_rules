@@ -17,7 +17,7 @@ def _script_configure(root_dir, flags, libs):
 
     # Apply configures
     for flag in flags:
-        script.append("sed -i '/--disable-everything/ a \\ \\ %s' wasm/build-scripts/configure-ffmpeg.sh" % flag)
+        script.append("sed -i '/#--enable-gpl/ i \\ \\ %s' wasm/build-scripts/configure-ffmpeg.sh" % flag)
 
     script_text = ("(cd %s; " % root_dir) + "; \\\n".join(script) + ")"
 
