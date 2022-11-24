@@ -50,5 +50,5 @@ wasm_library(
 wasm_deploy(
     name = "install",
     srcs = [":app"],
-    target = "/home/linshizhi/Workspaces/Mediawasm/BuildRule/wasm_rules/workers",
+    target = "/tmp",
 )
